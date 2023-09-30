@@ -1,9 +1,11 @@
+/* Estilizando o body */
 :root {
   --color-background: #000;
   --color-primary: #800ad4;
   --color-text: #fff;
 }
 
+/* Estilizando o container principal */
 .container .title {
   color: var(--color-text);
   font-size: 2.5rem;
@@ -11,21 +13,24 @@
   margin: 2rem 0 1rem;
 }
 
+/* Estilizando o container dos filmes */
 .title .query-text {
   color: var(--color-primary);
 }
 
+/* Estilizando o container dos filmes */
 .movies-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Três colunas igualmente espaçadas */
+  gap: 20px;
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* Estilizando o container dos filmes */
 .movies-container div {
-  width: 30%;
+  width: 100%;
   color: #fff;
   margin-bottom: 2.5rem;
   display: flex;
@@ -35,23 +40,28 @@
   padding: 1rem;
 }
 
+/* Estilizando o título do filme */
 .movies-container div img {
   max-width: 100%;
 }
 
+/* Estilizando o título do filme */
 .movies-container div img,
 .movies-container div p {
   margin-bottom: 1rem;
 }
 
+/* Estilizando o título do filme */
 .movies-container div h2 {
   margin-bottom: 1.5rem;
 }
 
+/* Estilizando o ícone de favorito */
 .movies-container div svg {
   color: var(--color-primary);
 }
 
+/* Estilizando o link de navegação */
 .movies-container div a {
   background-color: var(--color-primary);
   border: 2px solid var(--color-primary);
@@ -62,7 +72,97 @@
   font-weight: bold;
 }
 
+/* Estilizando o link de navegação */
 .movies-container div a:hover {
   background-color: transparent;
   color: var(--color-primary);
+}
+
+/* Estilizando a paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Estilizando o botão de página */
+.pagination-button {
+  background-color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 4px;
+  color: var(--color-background);
+  padding: 1rem 2rem; 
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0 10px;
+}
+
+/* Estilizando o botão de página ativa */
+.pagination-button:hover {
+  background-color: transparent;
+  color: var(--color-primary);
+}
+
+/* Estilizando o botão de página ativa */
+.pagination-button:disabled {
+  background-color: #ccc; 
+  border-color: #ccc; 
+  color: #888; 
+  cursor: not-allowed; 
+}
+
+/* Estilizando o indicador de página */
+.page-indicator {
+  font-size: 1.2rem; 
+  color: var(--color-primary); 
+  margin: 0 10px; 
+}
+
+/* Estilizando a caixa de seleção */
+select {
+  font-size: 1rem; 
+  padding: 0.5rem; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  background-color: #fff; 
+  color: #333; 
+  width: 150px; 
+  cursor: pointer; 
+}
+
+/* Estilizando as opções da caixa de seleção */
+select option {
+  background-color: #fff; 
+  color: #333; 
+}
+
+/* Estilizando quando a caixa de seleção está focada */
+select:focus {
+  outline: none; 
+  border-color: #800ad4; 
+  box-shadow: 0 0 4px rgba(128, 10, 212, 0.5);
+}
+
+/* Estilizando quando a caixa de seleção está desabilitada */
+select:disabled {
+  opacity: 0.6; 
+  cursor: not-allowed; 
+}
+
+/* Estilizando a caixa de seleção de gênero */
+.genre-select {
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: var(--color-background); 
+  color: var(--color-primary); 
+  width: 150px;
+  cursor: pointer;
+  margin: 0 auto; 
+  display: block; 
 }
