@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   BsGraphUp,
   BsWallet2,
@@ -16,8 +16,9 @@ const apiKey = import.meta.env.VITE_API_KEY;
 
 const Movie = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // Importe o useHistory
   const [movie, setMovie] = useState(null);
-  
+
   const getMovie = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
@@ -32,8 +33,12 @@ const Movie = () => {
     });
   };
 
+  const goBack = () => {
+    navigate(-1); // Use um número negativo para voltar uma página
+  };
+
   useEffect(() => {
-    const movieUrl = `${moviesURL}${id}?${apiKey}`;
+    const movieUrl = `${moviesURL}${id}?${apiKey}&language=pt-BR`;
     getMovie(movieUrl);
   }, [id]);
 
@@ -67,7 +72,7 @@ const Movie = () => {
             </h3>
             <p>{movie.overview}</p>
           </div>
-          <button className="pagination-button">Voltar</button> {/* Adicione o botão de voltar */}
+          <button className="pagination-button" onClick={goBack}>Voltar</button> {/* Adicione o botão de voltar */}
         </>
       )}
     </div>
