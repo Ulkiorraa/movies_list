@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaHeart } from "react-icons/fa";
 
 const imagesURL = import.meta.env.VITE_IMG;
 
 import PropTypes from 'prop-types';
 
-const MovieCard = ({ movie, showLink = true }) => {
+import "./MovieCard.css";
+
+const MovieCard = ({ movie, showLink = true, onAddToFavorites }) => {
   return (
     <div className="movie-card">
       <img src={imagesURL + movie.poster_path} alt={movie.title} />
@@ -15,6 +17,9 @@ const MovieCard = ({ movie, showLink = true }) => {
         <FaStar /> {movie.vote_average}
       </p>
         {showLink && <Link to={`/movie/${movie.id}`}>Detalhes</Link>}
+        <button className="favorites-button" onClick={() => onAddToFavorites(movie)}>
+        <FaHeart /> Adicionar aos Favoritos
+      </button>
     </div>
   );
 };
@@ -27,6 +32,7 @@ MovieCard.propTypes = {
     id: PropTypes.number.isRequired,
   }).isRequired,
   showLink: PropTypes.bool,
+  onAddToFavorites: PropTypes.func.isRequired,
 };
 
 export default MovieCard;

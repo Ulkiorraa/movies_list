@@ -89,21 +89,6 @@ const Home = () => {
   const [selectedPage, setSelectedPage] = useState(1);
   const [selectedGenre, setSelectedGenre] = useState("");
   const [title, setTitle] = useState("Melhores filmes");
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || []
-  );
-  
-  const addToFavorites = (movie) => {
-    // Verifique se o filme já está nos favoritos para evitar duplicatas
-    if (!favorites.some((fav) => fav.id === movie.id)) {
-      // Adicione o filme à lista de favoritos no estado
-      setFavorites([...favorites, movie]);
-      
-      // Atualize o localStorage com a lista de favoritos
-      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
-    }
-  };
-  
 
   const getTopRatedMovies = async (page, genre) => {
     let url = `${moviesURL}top_rated?${apiKey}&language=pt-BR&page=${page}`;
@@ -141,9 +126,9 @@ const Home = () => {
       const genreName = genres.find(
         (genre) => genre.id === parseInt(selectedGenre)
       )?.name;
-      setTitle(`Melhores filmes: ${genreName}`);
+      setTitle(`Favoritos: ${genreName}`);
     } else {
-      setTitle("Melhores filmes");
+      setTitle("Favoritos");
     }
   }, [selectedGenre, genres]);
 
@@ -171,7 +156,7 @@ const Home = () => {
       <div className="movies-container">
         {topMovies.length === 0 && <p>Carregando...</p>}
         {topMovies.length > 0 &&
-          topMovies.map((movie) => <MovieCard key={movie.id} movie={movie} onAddToFavorites={addToFavorites} />)}
+          topMovies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
       </div>
       <div className="pagination">
         <select
