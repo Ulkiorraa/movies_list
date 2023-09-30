@@ -10,14 +10,15 @@ import Search from './Pages/Search.jsx'
 
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route element={<App />} />
-        <Route path="/" element={<Home />} />
-        <Route path="movie/:id" element={<Movie />} />
-        <Route path="search" element={<Search />} />
+        <Route path="/" element={<App />}>
+          <Route path="/" element={<Home />} />
+          <Route path="movie/:id" element={<Movie />} />
+          <Route path="search" element={<Search />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
