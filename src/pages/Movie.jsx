@@ -17,7 +17,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 const Movie = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
-
+  
   const getMovie = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
@@ -67,6 +67,7 @@ const Movie = () => {
             </h3>
             <p>{movie.overview}</p>
           </div>
+          <button className="pagination-button">Voltar</button> {/* Adicione o botão de voltar */}
         </>
       )}
     </div>

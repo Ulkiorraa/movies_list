@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import App from './App.jsx'
-import Home from './Pages/Home.jsx'
-import Movie from './Pages/Movie.jsx'
-import Search from './Pages/Search.jsx'
+import Home from './pages/Home.jsx'
+import Movie from './pages/Movie.jsx'
+import Search from './pages/Search.jsx'
 
 
 import './index.css'
