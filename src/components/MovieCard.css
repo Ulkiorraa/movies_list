@@ -13,6 +13,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+  margin-top: 1rem;
 }
 
 /* Estilizando o botão "Adicionar aos Favoritos" no hover (quando o mouse passa por cima) */
@@ -23,7 +24,7 @@
 
 /* Estilizando o botão "Adicionar aos Favoritos" quando está desabilitado */
 .favorites-button:disabled {
-  background-color: #ccc;
-  color: #888;
+  background-color: var(--color-background);
+  color: var(--color-text);
   cursor: not-allowed;
 }

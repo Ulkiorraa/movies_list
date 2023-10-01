@@ -92,18 +92,17 @@ const Home = () => {
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem("favorites")) || []
   );
-  
+
   const addToFavorites = (movie) => {
     // Verifique se o filme já está nos favoritos para evitar duplicatas
     if (!favorites.some((fav) => fav.id === movie.id)) {
       // Adicione o filme à lista de favoritos no estado
       setFavorites([...favorites, movie]);
-      
+
       // Atualize o localStorage com a lista de favoritos
       localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
     }
   };
-  
 
   const getTopRatedMovies = async (page, genre) => {
     let url = `${moviesURL}top_rated?${apiKey}&language=pt-BR&page=${page}`;
@@ -129,11 +128,15 @@ const Home = () => {
     }
   };
 
-  const goToSelectedPage = () => {
-    if (selectedPage >= 1 && selectedPage <= totalPages) {
-      setCurrentPage(selectedPage);
-    }
-  };
+  useEffect(() => {
+    const goToSelectedPage = () => {
+      if (selectedPage >= 1 && selectedPage <= totalPages) {
+        setCurrentPage(selectedPage);
+      }
+    };
+
+    goToSelectedPage();
+  }, [selectedPage, totalPages]);
 
   // Atualiza o título quando o gênero selecionado muda
   useEffect(() => {
@@ -171,9 +174,17 @@ const Home = () => {
       <div className="movies-container">
         {topMovies.length === 0 && <p>Carregando...</p>}
         {topMovies.length > 0 &&
-          topMovies.map((movie) => <MovieCard key={movie.id} movie={movie} onAddToFavorites={addToFavorites} />)}
+          topMovies.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              onAddToFavorites={addToFavorites}
+              favorites={favorites}
+            />
+          ))}
       </div>
       <div className="pagination">
+        <span>Ir para a página:</span>
         <select
           value={selectedPage}
           onChange={(e) => setSelectedPage(parseInt(e.target.value))}
@@ -187,9 +198,6 @@ const Home = () => {
             )
           )}
         </select>
-        <button className="pagination-button" onClick={goToSelectedPage}>
-          Ir
-        </button>
         <button
           className="pagination-button"
           onClick={prevPage}

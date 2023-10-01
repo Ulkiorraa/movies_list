@@ -8,7 +8,9 @@ import PropTypes from 'prop-types';
 
 import "./MovieCard.css";
 
-const MovieCard = ({ movie, showLink = true, onAddToFavorites }) => {
+const MovieCard = ({ movie, showLink = true, onAddToFavorites, favorites }) => {
+  const isFavorite = favorites.some((fav) => fav.id === movie.id);
+
   return (
     <div className="movie-card">
       <img src={imagesURL + movie.poster_path} alt={movie.title} />
@@ -17,9 +19,23 @@ const MovieCard = ({ movie, showLink = true, onAddToFavorites }) => {
         <FaStar /> {movie.vote_average}
       </p>
         {showLink && <Link to={`/movie/${movie.id}`}>Detalhes</Link>}
-        <button className="favorites-button" onClick={() => onAddToFavorites(movie)}>
-        <FaHeart /> Adicionar aos Favoritos
-      </button>
+        {isFavorite && ( // Renderiza o ícone do coração se for favorito
+        <button
+          className="favorites-button"
+          onClick={() => onAddToFavorites(movie)}
+          disabled={isFavorite}
+        >
+          <FaHeart /> Favoritado
+        </button>
+      )}
+      {!isFavorite && ( // Renderiza o botão apenas se não for favorito
+        <button
+          className="favorites-button"
+          onClick={() => onAddToFavorites(movie)}
+        >
+          <FaHeart /> Adicionar aos Favoritos
+        </button>
+      )}
     </div>
   );
 };
@@ -33,6 +49,7 @@ MovieCard.propTypes = {
   }).isRequired,
   showLink: PropTypes.bool,
   onAddToFavorites: PropTypes.func.isRequired,
+  favorites: PropTypes.array.isRequired,
 };
 
 export default MovieCard;

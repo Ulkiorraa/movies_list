@@ -16,7 +16,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 
 const Movie = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // Importe o useHistory
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
 
   const getMovie = async (url) => {
@@ -37,6 +37,21 @@ const Movie = () => {
     navigate(-1); // Use um número negativo para voltar uma página
   };
 
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  );
+
+  const addToFavorites = (movie) => {
+    // Verifique se o filme já está nos favoritos para evitar duplicatas
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      // Adicione o filme à lista de favoritos no estado
+      setFavorites([...favorites, movie]);
+
+      // Atualize o localStorage com a lista de favoritos
+      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
+    }
+  };
+
   useEffect(() => {
     const movieUrl = `${moviesURL}${id}?${apiKey}&language=pt-BR`;
     getMovie(movieUrl);
@@ -46,7 +61,12 @@ const Movie = () => {
     <div className="movie-page">
       {movie && (
         <>
-          <MovieCard movie={movie} showLink={false} />
+          <MovieCard
+            movie={movie}
+            showLink={false}
+            onAddToFavorites={addToFavorites}
+            favorites={favorites}
+          />
           <p className="tagline">{movie.tagline}</p>
           <div className="info">
             <h3>
@@ -72,7 +92,10 @@ const Movie = () => {
             </h3>
             <p>{movie.overview}</p>
           </div>
-          <button className="pagination-button" onClick={goBack}>Voltar</button> {/* Adicione o botão de voltar */}
+          <button className="pagination-button" onClick={goBack}>
+            Voltar
+          </button>{" "}
+          {/* Adicione o botão de voltar */}
         </>
       )}
     </div>

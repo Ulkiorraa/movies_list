@@ -1,11 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import MovieCard from "../components/MovieCard";
+import SelectPage from "../components/selectPage";
 import "./MoviesGrid.css";
 
-const moviesURL = import.meta.env.VITE_API;
-const apiKey = import.meta.env.VITE_API_KEY;
-
-const Home = () => {
+const Favoritos = () => {
   const genres = useMemo(
     () => [
       {
@@ -83,67 +81,56 @@ const Home = () => {
     ],
     []
   );
+
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  );
+
+  const addToFavorites = (movie) => {
+    // Verifique se o filme já está nos favoritos para evitar duplicatas
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      // Adicione o filme à lista de favoritos no estado
+      setFavorites([...favorites, movie]);
+
+      // Atualize o localStorage com a lista de favoritos
+      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
+    }
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [topMovies, setTopMovies] = useState([]);
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [title, setTitle] = useState("Melhores filmes");
+  const [itemsPerPage] = useState(12); // Define quantos filmes por página
+  const [selectedGenre, setSelectedGenre] = useState(""); // Defina o estado selectedGenre
 
-  const getTopRatedMovies = async (page, genre) => {
-    let url = `${moviesURL}top_rated?${apiKey}&language=pt-BR&page=${page}`;
-    if (genre) {
-      url += `&with_genres=${genre}`;
-    }
-    const res = await fetch(url);
-    const data = await res.json();
+  const sortedFavorites = [...favorites].sort((a, b) => b.vote_average - a.vote_average);
 
-    setTopMovies(data.results);
-    setTotalPages(data.total_pages);
+  // Aplica a seleção de gênero se algum gênero estiver selecionado
+  const filteredFavorites = selectedGenre
+    ? sortedFavorites.filter((movie) => movie.genre_ids.includes(parseInt(selectedGenre)))
+    : sortedFavorites;
+
+  // Calcula o índice inicial e final dos filmes na página atual
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Filtra os filmes a serem exibidos na página atual
+  const moviesToShow = filteredFavorites.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+  const handleGenreChange = (genreId) => {
+    setSelectedGenre(genreId);
+    setCurrentPage(1); // Redefine a página para a primeira quando o gênero muda
   };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const goToSelectedPage = () => {
-    if (selectedPage >= 1 && selectedPage <= totalPages) {
-      setCurrentPage(selectedPage);
-    }
-  };
-
-  // Atualiza o título quando o gênero selecionado muda
-  useEffect(() => {
-    if (selectedGenre) {
-      const genreName = genres.find(
-        (genre) => genre.id === parseInt(selectedGenre)
-      )?.name;
-      setTitle(`Favoritos: ${genreName}`);
-    } else {
-      setTitle("Favoritos");
-    }
-  }, [selectedGenre, genres]);
-
-  useEffect(() => {
-    // Chama a função getTopRatedMovies com a página atual e o gênero selecionado
-    getTopRatedMovies(currentPage, selectedGenre);
-    window.scrollTo(0, 0);
-  }, [currentPage, selectedGenre]);
 
   return (
     <div className="container">
+      <h2 className="title">Filmes Favoritos (Ordenados por Maior Nota)</h2>
       <select
         className="genre-select"
         value={selectedGenre}
-        onChange={(e) => setSelectedGenre(e.target.value)}
+        onChange={(e) => handleGenreChange(e.target.value)}
       >
         <option value="">Todos os Gêneros</option>
         {genres.map((genre) => (
@@ -152,43 +139,40 @@ const Home = () => {
           </option>
         ))}
       </select>
-      <h2 className="title">{title}</h2>
       <div className="movies-container">
-        {topMovies.length === 0 && <p>Carregando...</p>}
-        {topMovies.length > 0 &&
-          topMovies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
+        {moviesToShow.length === 0 ? (
+          <p>Nenhum filme favorito encontrado.</p>
+        ) : (
+          moviesToShow.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              onAddToFavorites={addToFavorites}
+              favorites={favorites}
+            />
+          ))
+        )}
       </div>
       <div className="pagination">
-        <select
-          value={selectedPage}
-          onChange={(e) => setSelectedPage(parseInt(e.target.value))}
-        >
-          {/* Opções para todas as páginas disponíveis */}
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-            (page) => (
-              <option key={page} value={page}>
-                Página {page}
-              </option>
-            )
-          )}
-        </select>
-        <button className="pagination-button" onClick={goToSelectedPage}>
-          Ir
-        </button>
+      <SelectPage
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        totalPages={Math.ceil(filteredFavorites.length / itemsPerPage)}
+      />
         <button
           className="pagination-button"
-          onClick={prevPage}
+          onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Anterior
         </button>
         <span className="page-indicator">
-          Página {currentPage} de {totalPages}
+          Página {currentPage} de {Math.ceil(filteredFavorites.length / itemsPerPage)}
         </span>
         <button
           className="pagination-button"
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === Math.ceil(filteredFavorites.length / itemsPerPage)}
         >
           Próxima
         </button>
@@ -197,4 +181,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Favoritos;

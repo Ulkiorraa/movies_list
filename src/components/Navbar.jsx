@@ -29,6 +29,11 @@ const Navbar = () => {
           <BiSearchAlt2 />
         </button>
       </form>
+      <Link to="/favorite">
+        <button className="favorites-button">
+          Favoritos
+        </button>
+      </Link>
     </nav>
   );
 };
