@@ -28,3 +28,19 @@
   color: var(--color-text);
   cursor: not-allowed;
 }
+
+/* Estilizando o ícone do coração vazio */
+.icon-favorite-vazio {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 50px; 
+}
+
+/* Estilizando o ícone do coração cheio */
+.icon-favorite-cheio {
+  fill: var(--color-primary);
+}
+
+.favorites-button:hover .icon-favorite-vazio {
+  fill: var(--color-primary);
+}

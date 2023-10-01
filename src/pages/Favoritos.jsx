@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import MovieCard from "../components/MovieCard";
 import SelectPage from "../components/selectPage";
+import { FaArrowUp } from "react-icons/fa";
 import "./MoviesGrid.css";
 
 const Favoritos = () => {
@@ -117,11 +118,19 @@ const Favoritos = () => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+    window.scrollTo(0, 0);
   };
 
   const handleGenreChange = (genreId) => {
     setSelectedGenre(genreId);
     setCurrentPage(1); // Redefine a página para a primeira quando o gênero muda
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Para uma animação suave
+    });
   };
 
   return (
@@ -158,7 +167,8 @@ const Favoritos = () => {
         currentPage={currentPage}
         onPageChange={handlePageChange}
         totalPages={Math.ceil(filteredFavorites.length / itemsPerPage)}
-      />
+        pageText="Página "
+        />
         <button
           className="pagination-button"
           onClick={() => handlePageChange(currentPage - 1)}
@@ -177,6 +187,9 @@ const Favoritos = () => {
           Próxima
         </button>
       </div>
+      <button className="scroll-to-top" onClick={scrollToTop}>
+        <FaArrowUp />
+      </button>
     </div>
   );
 };

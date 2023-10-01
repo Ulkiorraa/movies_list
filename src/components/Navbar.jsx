@@ -20,6 +20,16 @@ const Navbar = () => {
       <h2>
         <Link to="/"><BiCameraMovie />MoviesLib</Link>
       </h2>
+      <Link to="/">
+        <button className="nav-button">
+          Home
+        </button>
+      </Link>
+      <Link to="/favorite">
+        <button className="nav-button">
+          Meus Favoritos
+        </button>
+      </Link>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Busque um filme" 
           onChange={(e) => setSearch(e.target.value)}
@@ -29,11 +39,6 @@ const Navbar = () => {
           <BiSearchAlt2 />
         </button>
       </form>
-      <Link to="/favorite">
-        <button className="favorites-button">
-          Favoritos
-        </button>
-      </Link>
     </nav>
   );
 };

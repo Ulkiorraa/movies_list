@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import MovieCard from "../components/MovieCard";
+import { FaArrowUp } from "react-icons/fa";
 import "./MoviesGrid.css";
 
 const moviesURL = import.meta.env.VITE_API;
@@ -92,7 +93,6 @@ const Home = () => {
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem("favorites")) || []
   );
-
   const addToFavorites = (movie) => {
     // Verifique se o filme já está nos favoritos para evitar duplicatas
     if (!favorites.some((fav) => fav.id === movie.id)) {
@@ -109,11 +109,19 @@ const Home = () => {
     if (genre) {
       url += `&with_genres=${genre}`;
     }
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+      const res = await fetch(url);
 
-    setTopMovies(data.results);
-    setTotalPages(data.total_pages);
+      if (!res.ok) {
+        throw new Error(`Error fetching data: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      setTopMovies(data.results);
+      setTotalPages(data.total_pages);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const nextPage = () => {
@@ -155,6 +163,13 @@ const Home = () => {
     getTopRatedMovies(currentPage, selectedGenre);
     window.scrollTo(0, 0);
   }, [currentPage, selectedGenre]);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Para uma animação suave
+    });
+  };
 
   return (
     <div className="container">
@@ -216,6 +231,9 @@ const Home = () => {
           Próxima
         </button>
       </div>
+      <button className="scroll-to-top" onClick={scrollToTop}>
+        <FaArrowUp />
+      </button>
     </div>
   );
 };

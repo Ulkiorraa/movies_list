@@ -25,7 +25,7 @@ const MovieCard = ({ movie, showLink = true, onAddToFavorites, favorites }) => {
           onClick={() => onAddToFavorites(movie)}
           disabled={isFavorite}
         >
-          <FaHeart /> Favoritado
+          <FaHeart className="icon-favorite-cheio" /> Favoritado
         </button>
       )}
       {!isFavorite && ( // Renderiza o botão apenas se não for favorito
@@ -33,7 +33,7 @@ const MovieCard = ({ movie, showLink = true, onAddToFavorites, favorites }) => {
           className="favorites-button"
           onClick={() => onAddToFavorites(movie)}
         >
-          <FaHeart /> Adicionar aos Favoritos
+          <FaHeart className="icon-favorite-vazio" /> Adicionar aos Favoritos
         </button>
       )}
     </div>
