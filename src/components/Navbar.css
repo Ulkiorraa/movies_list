@@ -65,6 +65,7 @@
   margin-top: 10px;
 }
 
+/* Estilos para o botão Favoritos */
 #navbar button.favorites-button:hover {
   background-color: transparent;
   color: var(--color-primary);
