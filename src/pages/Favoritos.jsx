@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import MovieCard from "../components/MovieCard";
 import SelectPage from "../components/selectPage";
 import { FaArrowUp } from "react-icons/fa";
+import { getFavoritesFromLocalStorage, addToFavorites } from "../components/FavoriteUpdate";
 import "./MoviesGrid.css";
 
 const Favoritos = () => {
@@ -82,25 +83,10 @@ const Favoritos = () => {
     ],
     []
   );
-
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || []
-  );
-
-  const addToFavorites = (movie) => {
-    // Verifique se o filme já está nos favoritos para evitar duplicatas
-    if (!favorites.some((fav) => fav.id === movie.id)) {
-      // Adicione o filme à lista de favoritos no estado
-      setFavorites([...favorites, movie]);
-
-      // Atualize o localStorage com a lista de favoritos
-      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
-    }
-  };
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12); // Define quantos filmes por página
   const [selectedGenre, setSelectedGenre] = useState(""); // Defina o estado selectedGenre
+  const [favorites] = useState(getFavoritesFromLocalStorage());
 
   const sortedFavorites = [...favorites].sort((a, b) => b.vote_average - a.vote_average);
 

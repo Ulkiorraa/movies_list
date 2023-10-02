@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import MovieCard from "../components/MovieCard";
 import { FaArrowUp } from "react-icons/fa";
 import "./MoviesGrid.css";
+import { getFavoritesFromLocalStorage, addToFavorites } from "../components/FavoriteUpdate";
 
 const moviesURL = import.meta.env.VITE_API;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -90,19 +91,8 @@ const Home = () => {
   const [selectedPage, setSelectedPage] = useState(1);
   const [selectedGenre, setSelectedGenre] = useState("");
   const [title, setTitle] = useState("Melhores filmes");
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || []
-  );
-  const addToFavorites = (movie) => {
-    // Verifique se o filme já está nos favoritos para evitar duplicatas
-    if (!favorites.some((fav) => fav.id === movie.id)) {
-      // Adicione o filme à lista de favoritos no estado
-      setFavorites([...favorites, movie]);
-
-      // Atualize o localStorage com a lista de favoritos
-      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
-    }
-  };
+  const [favorites] = useState(getFavoritesFromLocalStorage());
+  
 
   const getTopRatedMovies = async (page, genre) => {
     let url = `${moviesURL}top_rated?${apiKey}&language=pt-BR&page=${page}`;
@@ -121,18 +111,21 @@ const Home = () => {
       setTotalPages(data.total_pages);
     } catch (error) {
       console.error(error);
+      alert("Ocorreu um erro ao buscar os dados. Por favor, tente novamente mais tarde.");
     }
   };
 
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+      setSelectedPage(currentPage + 1);
     }
   };
 
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      setSelectedPage(currentPage - 1);
     }
   };
 
@@ -146,9 +139,14 @@ const Home = () => {
     goToSelectedPage();
   }, [selectedPage, totalPages]);
 
+  useEffect(() => {
+    setSelectedPage(currentPage);
+  }, [currentPage]);
+
   // Atualiza o título quando o gênero selecionado muda
   useEffect(() => {
     if (selectedGenre) {
+      setCurrentPage(1);
       const genreName = genres.find(
         (genre) => genre.id === parseInt(selectedGenre)
       )?.name;
