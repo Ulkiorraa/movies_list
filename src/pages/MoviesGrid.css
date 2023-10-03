@@ -21,7 +21,7 @@
 /* Estilizando o container dos filmes */
 .movies-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Três colunas igualmente espaçadas */
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 2rem;
   max-width: 1200px;
@@ -31,13 +31,15 @@
 /* Estilizando o container dos filmes */
 .movies-container div {
   width: 100%;
-  color: #fff;
+  color: var(--color-text);
   margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: #111;
   padding: 1rem;
+  height: 600px;
+  overflow: hidden;
 }
 
 /* Estilizando o título do filme */
@@ -54,6 +56,11 @@
 /* Estilizando o título do filme */
 .movies-container div h2 {
   margin-bottom: 1.5rem;
+  white-space: nowrap;
+  /* Use text-overflow para adicionar reticências (...) quando o título for muito longo */
+  text-overflow: ellipsis;
+  /* Use overflow para ocultar o texto que exceda a largura do elemento */
+  overflow: hidden;
 }
 
 /* Estilizando o ícone de favorito */

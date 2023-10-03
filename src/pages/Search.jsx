@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MovieCard from "../components/MovieCard";
 import { FaArrowUp } from "react-icons/fa";
-import { getFavoritesFromLocalStorage, addToFavorites } from "../components/FavoriteUpdate";
 
 const searchURL = import.meta.env.VITE_SEARCH;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -14,7 +13,20 @@ const Search = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedPage, setSelectedPage] = useState(1);
-  const [favorites] = useState(getFavoritesFromLocalStorage());
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  );
+
+  const addToFavorites = (movie) => {
+    // Verifique se o filme já está nos favoritos para evitar duplicatas
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      // Adicione o filme à lista de favoritos no estado
+      setFavorites([...favorites, movie]);
+
+      // Atualize o localStorage com a lista de favoritos
+      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
+    }
+  };
 
   const [movies, setMovies] = useState([]);
   const query = searchParams.get("q");

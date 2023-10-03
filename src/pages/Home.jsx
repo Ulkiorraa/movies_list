@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from "react";
 import MovieCard from "../components/MovieCard";
 import { FaArrowUp } from "react-icons/fa";
 import "./MoviesGrid.css";
-import { getFavoritesFromLocalStorage, addToFavorites } from "../components/FavoriteUpdate";
 
 const moviesURL = import.meta.env.VITE_API;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -91,7 +90,20 @@ const Home = () => {
   const [selectedPage, setSelectedPage] = useState(1);
   const [selectedGenre, setSelectedGenre] = useState("");
   const [title, setTitle] = useState("Melhores filmes");
-  const [favorites] = useState(getFavoritesFromLocalStorage());
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  );
+
+  const addToFavorites = (movie) => {
+    // Verifique se o filme já está nos favoritos para evitar duplicatas
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      // Adicione o filme à lista de favoritos no estado
+      setFavorites([...favorites, movie]);
+
+      // Atualize o localStorage com a lista de favoritos
+      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
+    }
+  };
   
 
   const getTopRatedMovies = async (page, genre) => {

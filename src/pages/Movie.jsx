@@ -6,7 +6,6 @@ import {
   BsHourglassSplit,
   BsFillFileEarmarkTextFill,
 } from "react-icons/bs";
-import { getFavoritesFromLocalStorage, addToFavorites } from "../components/FavoriteUpdate";
 
 import MovieCard from "../components/MovieCard";
 
@@ -19,8 +18,20 @@ const Movie = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
-  const [favorites] = useState(getFavoritesFromLocalStorage());
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  );
 
+  const addToFavorites = (movie) => {
+    // Verifique se o filme já está nos favoritos para evitar duplicatas
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      // Adicione o filme à lista de favoritos no estado
+      setFavorites([...favorites, movie]);
+
+      // Atualize o localStorage com a lista de favoritos
+      localStorage.setItem("favorites", JSON.stringify([...favorites, movie]));
+    }
+  };
   const getMovie = async (url) => {
     const res = await fetch(url);
     const data = await res.json();

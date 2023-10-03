@@ -9,6 +9,12 @@ import PropTypes from 'prop-types';
 import "./MovieCard.css";
 
 const MovieCard = ({ movie, showLink = true, onAddToFavorites, favorites }) => {
+
+  const handleAddToFavorites = () => {
+    // Chama a função para adicionar aos favoritos
+    onAddToFavorites(movie);
+  };
+
   const isFavorite = favorites.some((fav) => fav.id === movie.id);
 
   return (
@@ -22,7 +28,7 @@ const MovieCard = ({ movie, showLink = true, onAddToFavorites, favorites }) => {
         {isFavorite && ( // Renderiza o ícone do coração se for favorito
         <button
           className="favorites-button"
-          onClick={() => onAddToFavorites(movie)}
+          onClick={handleAddToFavorites}
           disabled={isFavorite}
         >
           <FaHeart className="icon-favorite-cheio" /> Favoritado
@@ -31,7 +37,7 @@ const MovieCard = ({ movie, showLink = true, onAddToFavorites, favorites }) => {
       {!isFavorite && ( // Renderiza o botão apenas se não for favorito
         <button
           className="favorites-button"
-          onClick={() => onAddToFavorites(movie)}
+          onClick={handleAddToFavorites}
         >
           <FaHeart className="icon-favorite-vazio" /> Adicionar aos Favoritos
         </button>
